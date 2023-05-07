@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupplyFrame assessment</title>
+    <!-- CSS (load bootstrap from a CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<style>
+  .icons{
+    font-size: 21px;
+    margin-left: 4px;
+    margin-right: 4px;
+    cursor: pointer;
+    color:blue;
+  }
+  .loader-off{
+    display: none;
+  }
+  .loader {
+    display: block;
+  border: 6px solid #f3f3f3; /* Light grey */
+  border-top: 6px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+  body{
+    width:100%;
+    height: 100%;
+  }
+  .noshow{
+    display:none;
+  }
+  #nav{
+    display:block;
+    padding: 3px;
+    width: 200px;
+    position: fixed;
+    top:420px;
+    left:50px;
+  }
+  /* #getButton{
+    border-radius: 10px;
+    width:300px;
+    padding: 2px;
+    color: black;
+    background-color: lightgray  ;
+    cursor: pointer;
+  } */
+  
+</style>
+<body class="w-100 h-100">
+    <div class="m-5 align-center w-100">
+    <h4 class="fs-20">Let's get some Dog facts!</h4>    
+    <button id="getButton" class="btn btn-primary">
+        Click for facts!
+    </button>
+    <div id="ldd">
+        
+    </div>
+    
+    <div id="showData" >
+     
+    </div>
+    <div id="nav" class="">
+
+    </div>
+</div>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+    var btn = document.getElementById('getButton')
+    factsArr = []
+    btn.addEventListener('click',()=>{
+        document.getElementById('ldd').classList.add('loader')
+        console.log('clicked')
+        
+        $.ajax({
+        url: "http://localhost:3000/get",
+        type: 'POST',
+        // dataType: 'json', // added data type
+        success: function(res) {
+            setTimeout(() => {
+            console.log('wait delay')
+            document.getElementById('ldd').classList.remove('loader')
+            document.getElementById('ldd').classList.add('loader-off')
+            }, 1000);
+            // document.getElementById('ldd').classList.remove('loader')
+            
+            console.log('GET FACTS ON FRONT',res);
+            factsArr = res.facts
+            var showData = document.getElementById('showData')
+            
+            //loop through facts array
+        
+            
+            //PAGINATION TRY 2
+            const nav = document.getElementById('nav');
+            const content = document.getElementById('showData');
+            let pageIndex = 0;
+            let itemsPerPage = 6;
+            loadItems();
+            function loadItems() {
+                content.innerHTML = "";
+                for (let i=pageIndex*itemsPerPage; i<(pageIndex*itemsPerPage)+itemsPerPage; i++) {
+                    if (!factsArr[i]) { break }
+                    const item = document.createElement('div');
+                    item.innerHTML = `
+                        <p><strong>${i+1}</strong> ${factsArr[i]}</p>
+                    `;
+                    content.append(item);
+                }
+                loadPageNav();
+            }
+            function loadPageNav() {
+                nav.style.fontWeight = "bold"
+                nav.innerHTML = "Page";
+                for (let i=0; i<(factsArr.length/itemsPerPage); i++) {
+                    
+                    const span = document.createElement('span');
+                    span.innerHTML = i+1;
+                    span.classList.add('icons')
+                    span.addEventListener('click', (e) => {
+                        pageIndex = e.target.innerHTML-1;
+                        loadItems();
+                    });
+                    if (i === pageIndex) {
+                        span.style.fontSize = "2rem";
+                        span.style.overflowWrap = "wrap"
+                        span.style.width = "800px"
+                        span.style.textDecoration = "underline"
+                    }
+                    nav.append(span);
+                }
+            }
+           
+
+            //PAGINATION
+            // let number = 1;
+            
+            // facts.slice(0,).map((fact)=>{
+            //     var p = document.createElement("p")
+            //     p.innerHTML = fact
+            //     showData.classList.add('noshow')
+            //     showData.appendChild(p)
+            //     })
+
+            // const page = document.querySelector('#pagenumber');
+            // const next = document.querySelector('#next');
+            // const back = document.querySelector('#back');
+
+            // if(number>0 && number<4){
+            // const nextHandler = () => {
+            // number++;
+            // page.innerHTML = number;
+            // };
+            // const backHandler = () => {
+            // number--;
+            // page.innerHTML = number;
+            // };
+
+            // next.addEventListener('click', nextHandler);
+            // back.addEventListener('click', backHandler);
+            // }
+
+            
+            // if(document.getElementById('pagenumber')==1){
+            //     facts1.map((fact)=>{
+            //     var p = document.createElement("p")
+            //     p.innerHTML = fact
+            //     showData.classList.add('noshow')
+            //     showData.appendChild(p)
+            //     })
+            // }
+            // else if(document.getElementById('pagenumber')==2){
+            //     facts2.map((fact)=>{
+            //     var p = document.createElement("p")
+            //     p.innerHTML = fact
+            //     showData.classList.add('noshow')
+
+            //     showData.appendChild(p)
+            //     })
+            // }
+            // else if(document.getElementById('pagenumber')==3){
+            //     facts3.map((fact)=>{
+            //     var p = document.createElement("p")
+            //     p.innerHTML = fact
+            //     showData.classList.add('noshow')
+            //     showData.appendChild(p)
+            //     })
+            // }
+            
+
+            
+        }
+    });
+        
+    })
+    
+    
+</script>
+</html>
