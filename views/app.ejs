@@ -21,12 +21,12 @@
   }
   .loader {
     display: block;
-  border: 6px solid #f3f3f3; /* Light grey */
-  border-top: 6px solid #3498db; /* Blue */
+  border: 10px solid #f3f3f3; /* Light grey */
+  border-top: 10px solid #03741d; /* Blue */
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1s linear;
+  width: 50px;
+  height: 50px;
+  animation: spin 1.5s linear;
 }
 
 @keyframes spin {
@@ -34,8 +34,8 @@
   100% { transform: rotate(360deg); }
 }
   body{
-    width:100%;
-    height: 100%;
+    max-width:100%;
+    max-height: 100%;
   }
   .noshow{
     display:none;
@@ -44,9 +44,14 @@
     display:block;
     padding: 3px;
     width: 200px;
-    position: fixed;
-    top:420px;
-    left:50px;
+   
+  }
+  #container{
+    border-right: 1px solid gray;
+    height:100%;
+    width:60%;
+    margin-left:auto;
+    margin-right:auto;
   }
   /* #getButton{
     border-radius: 10px;
@@ -58,12 +63,15 @@
   } */
   
 </style>
-<body class="w-100 h-100">
-    <div class="m-5 align-center w-100">
-    <h4 class="fs-20">Let's get some Dog facts!</h4>    
+<body>
+    <div class="m-5 align-center col-sm-6" id="container">
+    <h4 class="fs-20 col-sm-5">Let's get some Dog facts!</h4>    
     <button id="getButton" class="btn btn-primary">
         Click for facts!
     </button>
+    <div id="nav" class="">
+
+    </div>
     <div id="ldd">
         
     </div>
@@ -71,9 +79,7 @@
     <div id="showData" >
      
     </div>
-    <div id="nav" class="">
-
-    </div>
+    
 </div>
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -84,27 +90,22 @@
     btn.addEventListener('click',()=>{
         document.getElementById('ldd').classList.add('loader')
         console.log('clicked')
+        setTimeout(() => {
+          document.getElementById('ldd').classList.remove('loader')
+            document.getElementById('ldd').classList.add('loader-off')
+        }, 1000);
         
-        $.ajax({
+        setTimeout( () => {
+           $.ajax({
         url: "http://localhost:3000/get",
         type: 'POST',
-        // dataType: 'json', // added data type
         success: function(res) {
-            setTimeout(() => {
-            console.log('wait delay')
-            document.getElementById('ldd').classList.remove('loader')
-            document.getElementById('ldd').classList.add('loader-off')
-            }, 1000);
-            // document.getElementById('ldd').classList.remove('loader')
             
+            
+            //Pagination logic
             console.log('GET FACTS ON FRONT',res);
             factsArr = res.facts
-            var showData = document.getElementById('showData')
             
-            //loop through facts array
-        
-            
-            //PAGINATION TRY 2
             const nav = document.getElementById('nav');
             const content = document.getElementById('showData');
             let pageIndex = 0;
@@ -116,7 +117,7 @@
                     if (!factsArr[i]) { break }
                     const item = document.createElement('div');
                     item.innerHTML = `
-                        <p><strong>${i+1}</strong> ${factsArr[i]}</p>
+                        <p><strong>${i+1} </strong> ${factsArr[i]}</p>
                     `;
                     content.append(item);
                 }
@@ -143,67 +144,14 @@
                     nav.append(span);
                 }
             }
-           
-
-            //PAGINATION
-            // let number = 1;
-            
-            // facts.slice(0,).map((fact)=>{
-            //     var p = document.createElement("p")
-            //     p.innerHTML = fact
-            //     showData.classList.add('noshow')
-            //     showData.appendChild(p)
-            //     })
-
-            // const page = document.querySelector('#pagenumber');
-            // const next = document.querySelector('#next');
-            // const back = document.querySelector('#back');
-
-            // if(number>0 && number<4){
-            // const nextHandler = () => {
-            // number++;
-            // page.innerHTML = number;
-            // };
-            // const backHandler = () => {
-            // number--;
-            // page.innerHTML = number;
-            // };
-
-            // next.addEventListener('click', nextHandler);
-            // back.addEventListener('click', backHandler);
-            // }
-
-            
-            // if(document.getElementById('pagenumber')==1){
-            //     facts1.map((fact)=>{
-            //     var p = document.createElement("p")
-            //     p.innerHTML = fact
-            //     showData.classList.add('noshow')
-            //     showData.appendChild(p)
-            //     })
-            // }
-            // else if(document.getElementById('pagenumber')==2){
-            //     facts2.map((fact)=>{
-            //     var p = document.createElement("p")
-            //     p.innerHTML = fact
-            //     showData.classList.add('noshow')
-
-            //     showData.appendChild(p)
-            //     })
-            // }
-            // else if(document.getElementById('pagenumber')==3){
-            //     facts3.map((fact)=>{
-            //     var p = document.createElement("p")
-            //     p.innerHTML = fact
-            //     showData.classList.add('noshow')
-            //     showData.appendChild(p)
-            //     })
-            // }
-            
-
-            
+          
         }
-    });
+    });   
+
+
+        }, 1000);
+     
+  
         
     })
     
