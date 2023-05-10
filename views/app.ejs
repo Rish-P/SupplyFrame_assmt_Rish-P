@@ -8,6 +8,8 @@
     <!-- CSS (load bootstrap from a CDN) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+
 
 </head>
 <style>
@@ -24,7 +26,7 @@
   .loader {
     display: block;
   border: 10px solid #f3f3f3; /* Light grey */
-  border-top: 10px solid #03741d; /* Blue */
+  border-top: 10px solid orange; /* Blue */
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -54,10 +56,8 @@
     border:1px solid lightgray;
     height:100%;
     width:60%;
-    /* margin-left:auto;
-    margin-right:auto; */
     padding:5%;
-    box-shadow: 3px 3px 3px lightgray;
+    box-shadow: 3px 3px 3px rgb(55, 50, 50);
     border-radius: 3%;
     background-color: antiquewhite;
   }
@@ -69,10 +69,10 @@
     <button id="getButton" class="btn btn-primary w-6">
         Click for facts!
     </button>
-    <div id="nav" class="">
+    <div id="nav">
 
     </div>
-    <div id="ldd">
+    <div id="loaderComponent">
         
     </div>
     
@@ -82,79 +82,8 @@
     
 </div>
 </body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-<script>
-    var btn = document.getElementById('getButton')
-    factsArr = []
-    btn.addEventListener('click',()=>{
-        document.getElementById('ldd').classList.add('loader')
-        console.log('clicked')
-        setTimeout(() => {
-          document.getElementById('ldd').classList.remove('loader')
-            document.getElementById('ldd').classList.add('loader-off')
-        }, 1000);
-        
-        setTimeout( () => {
-           $.ajax({
-        url: "http://localhost:3000/get",
-        type: 'POST',
-        success: function(res) {
-            
-            
-            //Pagination logic
-            console.log('GET FACTS ON FRONT',res);
-            factsArr = res.facts
-            
-            const nav = document.getElementById('nav');
-            const content = document.getElementById('showData');
-            let pageIndex = 0;
-            let itemsPerPage = 6;
-            loadItems();
-            function loadItems() {
-                content.innerHTML = "";
-                for (let i=pageIndex*itemsPerPage; i<(pageIndex*itemsPerPage)+itemsPerPage; i++) {
-                    if (!factsArr[i]) { break }
-                    const item = document.createElement('div');
-                    item.innerHTML = `
-                        <p><strong><i class="fa-solid fa-dog"></i> </strong> ${factsArr[i]}</p>
-                    `;
-                    content.append(item);
-                }
-                loadPageNav();
-            }
-            function loadPageNav() {
-                nav.style.fontWeight = "bold"
-                nav.innerHTML = "Page";
-                for (let i=0; i<(factsArr.length/itemsPerPage); i++) {
-                    
-                    const span = document.createElement('span');
-                    span.innerHTML = i+1;
-                    span.classList.add('icons')
-                    span.addEventListener('click', (e) => {
-                        pageIndex = e.target.innerHTML-1;
-                        loadItems();
-                    });
-                    if (i === pageIndex) {
-                        span.style.fontSize = "2rem";
-                        span.style.overflowWrap = "wrap"
-                        span.style.width = "800px"
-                        span.style.color = "orange"
-                    }
-                    nav.append(span);
-                }
-            }
-          
-        }
-    });   
-
-
-        }, 1000);
-     
+<script type="text/javascript" src="../views/helper.js"></script>
   
-        
-    })
-    
-    
 </script>
 </html>
