@@ -1,154 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupplyFrame assessment</title>
-    <!-- CSS (load bootstrap from a CDN) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SupplyFrame assessment</title>
+  <!-- CSS (load bootstrap from a CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 
 
 </head>
 <style>
-  .icons{
+  .icons {
     font-size: 21px;
     margin-left: 4px;
     margin-right: 4px;
     cursor: pointer;
-    color:blue;
+    color: blue;
   }
-  .loader-off{
+
+  .loader-off {
     display: none;
   }
+
   .loader {
     display: block;
-  border: 10px solid #f3f3f3; /* Light grey */
-  border-top: 10px solid orange; /* Blue */
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1.5s linear;
-}
+    border: 10px solid #f3f3f3;
+    /* Light grey */
+    border-top: 10px solid orange;
+    /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1.5s linear;
+  }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-  body{
-    width:100%;
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  body {
+    width: 100%;
     height: 100%;
-    background-image: linear-gradient(to right,rgb(228, 125, 125), rgb(244, 181, 9));
+    background-image: linear-gradient(to right, rgb(228, 125, 125), rgb(244, 181, 9));
 
   }
-  .noshow{
-    display:none;
+
+  .noshow {
+    display: none;
   }
-  #nav{
-    display:block;
+
+  #nav {
+    display: block;
     padding: 3px;
     width: 200px;
-   
+
   }
-  #container{
-    border:1px solid lightgray;
-    height:100%;
-    width:60%;
-    padding:5%;
+
+  #container {
+    border: 1px solid lightgray;
+    height: 100%;
+    width: 60%;
+    padding: 5%;
     box-shadow: 3px 3px 3px rgb(55, 50, 50);
     border-radius: 3%;
     background-color: antiquewhite;
   }
-  
 </style>
+
 <body>
-    <div class="align-center col-sm-6 justify-center mx-auto mt-4" id="container">
-    <h4 class="fs-20 ms-2 col-sm-6">Let's get some Dog facts!</h4>    
+  <div class="align-center col-sm-6 justify-center mx-auto mt-4" id="container">
+    <h4 class="fs-20 ms-2 col-sm-6">Let's get some Cat facts!</h4>
     <button id="getButton" class="btn btn-primary w-6">
-        Click for facts!
+      Click for facts!
     </button>
     <div id="nav">
 
     </div>
     <div id="loaderComponent">
-        
+
     </div>
-    
-    <div id="showData" >
-     
+
+    <div id="showData">
+
     </div>
-    
-</div>
+
+  </div>
 </body>
 
 <script>
   var btn = document.getElementById('getButton')
-    factsArr = []
-    function factsCollectorSuccess(res){
-        
-            //Pagination logic
-            factsArr = res.facts
-            
-            const nav = document.getElementById('nav');
-            const content = document.getElementById('showData');
-            let pageIndex = 0;
-            let itemsPerPage = 6;
-            loadItems();
-            function loadItems() {
-                content.innerHTML = "";
-                for (let i=pageIndex*itemsPerPage; i<(pageIndex*itemsPerPage)+itemsPerPage; i++) {
-                    if (!factsArr[i]) { break }
-                    const item = document.createElement('div');
-                    item.innerHTML = `
-                        <p><strong><i class="fa-solid fa-dog"></i> </strong> ${factsArr[i]}</p>
+  factsArr = []
+  function factsCollectorSuccess(res) {
+
+    //Pagination logic
+    factsArr = res
+
+    const nav = document.getElementById('nav');
+    const content = document.getElementById('showData');
+    let pageIndex = 0;
+    let itemsPerPage = 2;
+    loadItems();
+    function loadItems() {
+      content.innerHTML = "";
+      for (let i = pageIndex * itemsPerPage; i < (pageIndex * itemsPerPage) + itemsPerPage; i++) {
+        if (!factsArr[i]) { break }
+        const item = document.createElement('div');
+        item.innerHTML = `
+                        <p><strong><i class="fa-solid fa-cat"></i> </strong> ${factsArr[i]}</p>
                     `;
-                    content.append(item);
-                }
-                loadPageNav();
-            }
-            function loadPageNav() {
-                nav.style.fontWeight = "bold"
-                nav.innerHTML = "Page";
-                for (let i=0; i<(factsArr.length/itemsPerPage); i++) {
-                    
-                    const span = document.createElement('span');
-                    span.innerHTML = i+1;
-                    span.classList.add('icons')
-                    span.addEventListener('click', (e) => {
-                        pageIndex = e.target.innerHTML-1;
-                        loadItems();
-                    });
-                    if (i === pageIndex) {
-                        span.style.fontSize = "2rem";
-                        span.style.overflowWrap = "wrap"
-                        span.style.width = "800px"
-                        span.style.color = "orange"
-                    }
-                    nav.append(span);
-                }
-            }
+        content.append(item);
+      }
+      loadPageNav();
     }
-    btn.addEventListener('click',()=>{
-        document.getElementById('loderComponent').classList.add('loader')
-        setTimeout(() => {
-          document.getElementById('loaderComponent').classList.remove('loader')
-            document.getElementById('loaderComponent').classList.add('loader-off')
-        }, 1000);
-        
-        setTimeout( () => {
-           $.ajax({
+    function loadPageNav() {
+      nav.style.fontWeight = "bold"
+      nav.innerHTML = "Page";
+      for (let i = 0; i < (factsArr.length / itemsPerPage); i++) {
+
+        const span = document.createElement('span');
+        span.innerHTML = i + 1;
+        span.classList.add('icons')
+        span.addEventListener('click', (e) => {
+          pageIndex = e.target.innerHTML - 1;
+          loadItems();
+        });
+        if (i === pageIndex) {
+          span.style.fontSize = "2rem";
+          span.style.marginBottom="4%"
+          span.style.overflowWrap = "wrap"
+          span.style.width = "800px"
+          span.style.color = "orange"
+        }
+        nav.append(span);
+      }
+    }
+  }
+  btn.addEventListener('click', () => {
+    document.getElementById('loaderComponent').classList.add('loader')
+    setTimeout(() => {
+      document.getElementById('loaderComponent').classList.remove('loader')
+      document.getElementById('loaderComponent').classList.add('loader-off')
+    }, 1000);
+
+    setTimeout(() => {
+      $.ajax({
         url: "http://localhost:3000/get",
         type: 'POST',
         success: factsCollectorSuccess
-            });   
-        }, 1000);
-     
-  
-        
-    })
+      });
+    }, 1000);
+
+
+
+  })
 </script>
-  
+
 </script>
+
 </html>
